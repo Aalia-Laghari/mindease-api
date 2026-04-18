@@ -5,11 +5,10 @@ from pydantic import BaseModel
 
 app = FastAPI()
 
-HF_API_URL = "https://api-inference.huggingface.co/models/Aalia-Laghari/mindease-stress-model"
-HF_TOKEN = os.environ.get("HF_TOKEN")  # set this in Railway environment variables
+HF_SPACE_URL = "https://aalia-laghari-mindease-api.hf.space/predict"
 
 class PredictRequest(BaseModel):
-    inputs: str  # adjust type to match what your HF model expects (str or dict)
+    inputs: str
 
 @app.get("/")
 def health():
@@ -17,12 +16,10 @@ def health():
 
 @app.post("/predict")
 def predict(data: PredictRequest):
-    headers = {"Authorization": f"Bearer {HF_TOKEN}"}
     response = requests.post(
-        HF_API_URL,
-        headers=headers,
-        json=data.dict(),
-        timeout=30
+        HF_SPACE_URL,
+        json={"data": [data.inputs]},
+        timeout=60
     )
     if response.status_code != 200:
         raise HTTPException(status_code=response.status_code, detail=response.text)
