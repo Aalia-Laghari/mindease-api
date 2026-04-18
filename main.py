@@ -23,4 +23,13 @@ def predict(data: PredictRequest):
     )
     if response.status_code != 200:
         raise HTTPException(status_code=response.status_code, detail=response.text)
-    return response.json()
+
+    result = response.json()
+    label = result["data"][0]["label"]
+    score = result["data"][0]["score"]
+
+    return {
+        "stressed": label == "LABEL_1",
+        "confidence": round(score * 100, 1),
+        "label": label
+    }
