@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 app = FastAPI()
 
-HF_SPACE_URL = "https://aalia-laghari-mindease-api.hf.space/run/predict"
+HF_SPACE_URL = "https://aalia-laghari-mindease-api.hf.space/gradio_api/run/predict"
 
 class PredictRequest(BaseModel):
     inputs: str
